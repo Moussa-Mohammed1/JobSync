@@ -1,0 +1,86 @@
+{
+  "manifest_version": 3,
+  "name": "JobSync - Automatic Job Application Tracker",
+  "version": "1.0.0",
+  "description": "Automatically records job applications into an Excel spreadsheet",
+  "permissions": [
+    "storage",
+    "notifications",
+    "scripting",
+    "alarms",
+    "downloads"
+  ],
+  "host_permissions": [
+    "https://*.linkedin.com/*",
+    "https://*.indeed.com/*",
+    "https://*.glassdoor.com/*",
+    "https://*.greenhouse.io/*",
+    "https://*.lever.co/*",
+    "https://*.myworkdayjobs.com/*",
+    "https://*.workday.com/*",
+    "https://*.ashbyhq.com/*",
+    "https://*.smartrecruiters.com/*",
+    "https://*.welcomehunt.com/*",
+    "https://*.bamboohr.com/*",
+    "https://*.bamboohr.co.uk/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.linkedin.com/*",
+        "https://*.indeed.com/*",
+        "https://*.glassdoor.com/*",
+        "https://*.greenhouse.io/*",
+        "https://*.lever.co/*",
+        "https://*.myworkdayjobs.com/*",
+        "https://*.workday.com/*",
+        "https://*.ashbyhq.com/*",
+        "https://*.smartrecruiters.com/*",
+        "https://*.welcomehunt.com/*",
+        "https://*.bamboohr.com/*",
+        "https://*.bamboohr.co.uk/*"
+      ],
+      "js": [
+        "utils/storage.js",
+        "utils/detector.js",
+        "utils/extractor.js",
+        "utils/duplicate.js",
+        "adapters/base.js",
+        "adapters/linkedin.js",
+        "adapters/indeed.js",
+        "adapters/glassdoor.js",
+        "adapters/greenhouse.js",
+        "adapters/lever.js",
+        "adapters/workday.js",
+        "adapters/ashby.js",
+        "adapters/smartrecruiters.js",
+        "adapters/wttj.js",
+        "adapters/bamboohr.js",
+        "adapters/registry.js",
+        "content.js"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "JobSync",
+    "default_icon": {
+      "16": "assets/icon16.png",
+      "48": "assets/icon48.png",
+      "128": "assets/icon128.png"
+    }
+  },
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
+  },
+  "icons": {
+    "16": "assets/icon16.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
+  }
+}
