@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>JobSync - Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>JobSync Settings</h1>
+      <p class="subtitle">Configure your automatic job application tracker</p>
+    </header>
+
+    <section class="card">
+      <h2>Excel File</h2>
+      <div class="file-section">
+        <div class="file-status">
+          <span class="status-indicator" id="fileIndicator"></span>
+          <span id="filePath">
+            Data stored securely in extension.
+            <a href="#" id="downloadXlsxLink">Download .xlsx</a> to save to your computer.
+          </span>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button id="selectFileBtn" class="btn btn-primary">
+            <span id="selectFileBtnText">Import .xlsx File</span>
+          </button>
+          <button id="downloadXlsxBtn" class="btn btn-accent">&#11015; Download .xlsx</button>
+        </div>
+        <p class="help-text" id="fileHelpText">
+          <strong>Import:</strong> Load an existing .xlsx file to continue where you left off.<br>
+          <strong>Download:</strong> Save the latest data as .xlsx to your Downloads folder anytime.<br>
+          <strong>Auto-export:</strong> Enable below to auto-save .xlsx to Downloads after every application.
+        </p>
+      </div>
+      <input type="file" id="fileInput" accept=".xlsx" style="display:none">
+    </section>
+
+    <section class="card">
+      <h2>General Settings</h2>
+      <div class="setting-group">
+        <label class="toggle-row">
+          <span>
+            <span class="toggle-label">Auto-save</span>
+            <span class="toggle-desc">Automatically save applications when submission is detected</span>
+          </span>
+          <input type="checkbox" id="autoSave" class="toggle">
+        </label>
+      </div>
+      <div class="setting-group">
+        <label class="toggle-row">
+          <span>
+            <span class="toggle-label">Auto-export to Downloads</span>
+            <span class="toggle-desc">Automatically save .xlsx to your Downloads folder after every application</span>
+          </span>
+          <input type="checkbox" id="autoExportXlsx" class="toggle">
+        </label>
+      </div>
+      <div class="setting-group">
+        <label class="toggle-row">
+          <span>
+            <span class="toggle-label">Notifications</span>
+            <span class="toggle-desc">Show browser notifications when applications are saved</span>
+          </span>
+          <input type="checkbox" id="notifications" class="toggle">
+        </label>
+      </div>
+      <div class="setting-group">
+        <label class="toggle-row">
+          <span>
+            <span class="toggle-label">Duplicate Detection</span>
+            <span class="toggle-desc">Prevent saving the same application twice</span>
+          </span>
+          <input type="checkbox" id="duplicateDetection" class="toggle">
+        </label>
+      </div>
+      <div class="setting-group">
+        <label class="toggle-row">
+          <span>
+            <span class="toggle-label">Debug Mode</span>
+            <span class="toggle-desc">Log detailed information to console for troubleshooting</span>
+          </span>
+          <input type="checkbox" id="debugMode" class="toggle">
+        </label>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Supported Websites</h2>
+      <p class="help-text">Toggle which job platforms should be monitored</p>
+      <div id="websiteList" class="website-list"></div>
+    </section>
+
+    <section class="card">
+      <h2>Pending Applications</h2>
+      <div class="pending-section">
+        <p id="pendingCount">0 applications pending sync</p>
+        <button id="syncBtn" class="btn btn-secondary">Sync Now</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Data Management</h2>
+      <div class="data-actions">
+        <button id="exportJsonBtn" class="btn btn-secondary">Export as JSON</button>
+        <button id="clearHistoryBtn" class="btn btn-danger">Clear Local History</button>
+      </div>
+    </section>
+
+    <section class="card" id="debugCard" style="display:none">
+      <h2>Debug Info</h2>
+      <pre id="debugInfo" style="font-size:11px;max-height:200px;overflow:auto;background:#f5f5f5;padding:8px;border-radius:4px;"></pre>
+    </section>
+
+    <div id="toast" class="toast" style="display:none;"></div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>
