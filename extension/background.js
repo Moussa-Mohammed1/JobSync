@@ -23,7 +23,7 @@ chrome.runtime.onInstalled.addListener(async () => {
     await chrome.storage.local.set({
       settings: {
         autoSave: true, notifications: true, duplicateDetection: true, debugMode: false,
-        autoExportXlsx: true,
+        autoExportXlsx: false,
         supportedWebsites: ['linkedin', 'indeed', 'glassdoor', 'greenhouse', 'lever',
           'workday', 'ashby', 'smartrecruiters', 'wttj', 'bamboohr'],
         fileHandleStored: false, lastSavedPath: ''
@@ -136,17 +136,8 @@ async function handleSave(data, source) {
     await chrome.storage.local.set({ pendingApplications: pending });
   }
 
-  // Auto-export to Downloads
-  let exportOk = false;
-  if (settings.autoExportXlsx !== false) {
-    const r = await exportToDownloads();
-    exportOk = r.success;
-  }
-
   notify('Application Saved',
-    exportOk
-      ? `${data.title || 'Job'} at ${data.company || 'Company'} recorded. File saved to Downloads.`
-      : `${data.title || 'Job'} at ${data.company || 'Company'} recorded.`,
+    `${data.title || 'Job'} at ${data.company || 'Company'} recorded.`,
     'success');
 
   return { success: true };
@@ -166,19 +157,38 @@ async function initWorkbook() {
 }
 
 async function getWorkbookFromStorage() {
+  let wb;
   const data = await chrome.storage.local.get('excelData');
   if (data.excelData) {
     try {
       const buf = base64ToBuffer(data.excelData);
-      return XLSX.read(buf, { type: 'array' });
+      wb = XLSX.read(buf, { type: 'array' });
     } catch (e) {
       console.error('Failed to parse workbook, creating new:', e);
     }
   }
-  const wb = XLSX.utils.book_new();
-  const ws = XLSX.utils.aoa_to_sheet([COLUMNS]);
-  autoFitColumns(ws);
-  XLSX.utils.book_append_sheet(wb, ws, 'Applications');
+  if (!wb) {
+    wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet([COLUMNS]);
+    autoFitColumns(ws);
+    XLSX.utils.book_append_sheet(wb, ws, 'Applications');
+    return wb;
+  }
+  // Ensure the workbook has column headers as the first row
+  const sheetName = wb.SheetNames[0];
+  const ws = wb.Sheets[sheetName];
+  const existing = XLSX.utils.sheet_to_json(ws, { header: 1 });
+  const hasHeaders = existing.length > 0 && existing[0] && existing[0][0] === COLUMNS[0];
+
+  if (!hasHeaders) {
+    // Build new data: headers row + all existing rows
+    const newData = [COLUMNS, ...existing];
+    delete wb.Sheets[sheetName];
+    const newWs = XLSX.utils.aoa_to_sheet(newData);
+    autoFitColumns(newWs);
+    wb.Sheets[sheetName] = newWs;
+  }
+
   return wb;
 }
 

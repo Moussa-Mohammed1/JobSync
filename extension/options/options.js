@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   async function loadSettings() {
     const r = await chrome.storage.local.get('settings');
     const defaults = {
-      autoSave: true, autoExportXlsx: true, notifications: true,
+      autoSave: true, autoExportXlsx: false, notifications: true,
       duplicateDetection: true, debugMode: false,
       supportedWebsites: ALL_WEBSITES.map(s => s.id),
       fileHandleStored: false, lastSavedPath: ''
